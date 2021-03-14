@@ -1,0 +1,21 @@
+{% extends "interface/base_layout.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-4">Hello, {{user.username}}!</h1>
+            <p class="lead">Click these to see some graphs!</p>
+            <a class="nav-link" href="{% url 'games' %}">Games by platform and year</a>
+            <a class="nav-link" href="{% url 'favorites' %}">Some sales facts about some games I liked</a>
+          </div>
+        </div>
+    {% else %}
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-4">Hello!</h1>
+            <p class="lead">Please Login/Register!</p>
+          </div>
+        </div>
+    {% endif %}
+{% endblock content %}

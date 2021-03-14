@@ -1,0 +1,78 @@
+{% extends "interface/base_layout.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-4">Games by platform and year</h1>
+            <form method = "GET">
+              {{ form }}
+              <input type = "submit" value = "Select">
+            </form>
+            <figure class="highcharts-figure">
+                <div id="container-highcharts"></div>
+                <p class="highcharts-description">
+                    Chart showing number of games released by year and platform
+                </p>
+            </figure>
+          </div>
+        </div>
+<!--        <form method = "GET">-->
+<!--          {{ form }}-->
+<!--          <input type = "submit" value = "Submit">-->
+<!--        </form>-->
+    {% else %}
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-4">Hello!</h1>
+            <p class="lead">Please Login/Register!</p>
+          </div>
+        </div>
+    {% endif %}
+<script type="text/javascript">
+    Highcharts.chart('container-highcharts', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Number of games released by year and platform'
+    },
+    subtitle: {
+        text: 'Source: csv file'
+    },
+    xAxis: {
+        categories: [
+            {% for el in years %} '{{ el }}', {% endfor %}
+        ],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: '# of games released'
+        }
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y} games</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [
+    {% for el in data %} {name: '{{el.0}}', data: {{el.1}}}, {% endfor %}
+    ]
+});
+  </script>
+{% endblock content %}
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>

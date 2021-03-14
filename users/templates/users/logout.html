@@ -1,0 +1,12 @@
+{% extends "interface/base_layout.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h2>Logged out!</h2>
+<div class="col-lg-12 shadow-lg rounded">
+    <div>
+        <small class="text-muted">
+            Log back in? <a href="{% url 'login' %}">Sign In</a>
+        </small>
+    </div>
+</div>
+{% endblock content %}

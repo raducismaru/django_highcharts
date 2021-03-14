@@ -1,0 +1,68 @@
+{% extends "interface/base_layout.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-4">Some games I liked</h1>
+            <form method = "GET">
+              {{ form }}
+              <input type = "submit" value = "Select">
+            </form>
+            <figure class="highcharts-figure">
+                <div id="container-highcharts"></div>
+                <p class="highcharts-description">
+                    This pie chart shows Percentages of global sales by region.
+                </p>
+            </figure>
+          </div>
+        </div>
+    {% else %}
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-4">Hello!</h1>
+            <p class="lead">Please Login/Register!</p>
+          </div>
+        </div>
+    {% endif %}
+<script type="text/javascript">
+    Highcharts.chart('container-highcharts', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: '{{ data.0.name }} sales globally'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    series: [{
+        name: 'Sales',
+        colorByPoint: true,
+        data: [{% for name, value in data.0.items %} {% if not name == "name" %} {name: '{{ name }}', y: {{ value }}},  {% endif %} {% endfor %}]
+    }]
+});
+  </script>
+{% endblock content %}
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
